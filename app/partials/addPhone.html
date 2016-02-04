@@ -1,0 +1,27 @@
+
+<h1>New Phone</h1>
+<p>Fill the following fields in order to create a new phone:</p>
+<table style="width:50%">
+  <tr>
+    <td>ID:</td>
+    <td><input ng-model="id", name="id"></td>
+  </tr>
+  <tr>
+    <td>Name:</td>
+    <td><input ng-model="name",name="name"></td>
+  </tr>
+  <tr>
+    <td>Snippet:</td>
+    <td><input ng-model="snippet"></td>
+  </tr>
+  <tr>
+    <td>Age:</td>
+    <td><input ng-model="age"></td>
+  </tr>
+  <tr>
+    <td>Image Name:</td>
+    <td><input ng-model="imageUrl"></td>
+  </tr>
+</table>
+<button ng-click="addNewPhone({id: id, name: name, snippet: snippet, age: age, imageUrl: imageUrl})">Create</button>
+<input type="button" onclick="location.href='#/phones';" value="Back" />

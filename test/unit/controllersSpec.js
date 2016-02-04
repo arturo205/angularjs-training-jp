@@ -39,17 +39,26 @@ describe('PhoneCat controllers', function() {
     it('should set the default value of orderProp model', function() {
       expect(scope.orderProp).toBe('age');
     });
+    
+    it('should create a new phone', function() {
+      expect(scope.phones).toEqualData([]);
+      $httpBackend.flush();
+      //scope.phones.add()
+      expect(scope.phones).toEqualData(
+        [{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
+        //[{name: 'Nexus S'}, {name: 'Motorola DROID'}, {name: 'LG G3'}]);
+    });
   });
 
 
   describe('PhoneDetailCtrl', function(){
     var scope, $httpBackend, ctrl,
-        xyzPhoneData = function() {
-          return {
-            name: 'phone xyz',
-                images: ['image/url1.png', 'image/url2.png']
-          }
+      xyzPhoneData = function() {
+        return {
+          name: 'phone xyz',
+          images: ['image/url1.png', 'image/url2.png']
         };
+      };
 
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
@@ -62,6 +71,13 @@ describe('PhoneCat controllers', function() {
     }));
 
 
+    it('should fetch phone detail', function() {
+      expect(scope.phone).toEqualData({});
+      $httpBackend.flush();
+
+      expect(scope.phone).toEqualData(xyzPhoneData());
+    });
+    
     it('should fetch phone detail', function() {
       expect(scope.phone).toEqualData({});
       $httpBackend.flush();
