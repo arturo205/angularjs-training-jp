@@ -97,3 +97,17 @@ phonecatControllers.controller('PhoneEditCtrl', ['$scope', '$routeParams', 'Phon
       console.log('A phone was edited!.');
     };
   }]);
+  
+phonecatControllers.controller('PhoneDeleteCtrl', ['$scope', '$routeParams', 'Phone', '$location',
+  function($scope, $routeParams, Phone, $location) {
+    var phoneToDelete = [];
+    console.log('Entered the PhoneDeleteCtrl controller.');
+    for(var i = 0; i < allPhones.length; i++) {
+      if (allPhones[i].id == $routeParams.phoneId) {
+        var phoneToDelete = allPhones.splice(i,1);
+        break;
+      }
+    }
+    console.log('Number of phones that were deleted: ' + phoneToDelete.length);
+    $location.path('/phones');
+  }]);
