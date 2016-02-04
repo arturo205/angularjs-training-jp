@@ -9,7 +9,7 @@
         <option value="name">Alphabetical</option>
         <option value="age">Newest</option>
       </select>
-      <input type="button" onclick="location.href='#/addPhone';" value="New phone" />
+      <input type="button" onclick="location.href='#/addPhone';" value="New phone" style="background-color:#75ADFF; color:#FFFFFF"/>
 
     </div>
     <div class="col-md-10">
@@ -21,7 +21,15 @@
           <a href="#/phones/{{phone.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}" alt="{{phone.name}}"></a>
           <a href="#/phones/{{phone.id}}">{{phone.name}}</a>
           <p>{{phone.snippet}}</p>
-          <a href="#/phones/{{phone.id}}/edit">Edit Phone</a>
+          <p>
+            <table>
+              <tr>
+                <th style='width:150px;'><a href="#/phones/{{phone.id}}/edit">Edit Phone</a></th>
+                <th style='width:150px;'><a href="#/phones/{{phone.id}}/delete">Delete Phone</a></th>
+                <th></th>
+              </tr>
+            </table>
+          </p>
         </li>
       </ul>
 
