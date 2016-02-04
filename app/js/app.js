@@ -25,6 +25,10 @@ phonecatApp.config(['$routeProvider',
         templateUrl: 'partials/addPhone.html',
         controller: 'PhoneAddCtrl'
       }).
+      when('/phones/:phoneId/edit', {
+        templateUrl: 'partials/edit-phone.html',
+        controller: 'PhoneEditCtrl'
+      }).
       otherwise({
         redirectTo: '/phones'
       });

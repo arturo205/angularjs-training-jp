@@ -4,6 +4,7 @@
 
 var phonecatControllers = angular.module('phonecatControllers', []);
 var allPhones = [];
+var myPhone = null;
 var initializeFlag = true;
 
 phonecatControllers.controller('PhoneListCtrl', ['$scope', 'Phone',
@@ -18,6 +19,7 @@ phonecatControllers.controller('PhoneListCtrl', ['$scope', 'Phone',
           var tempPhone = {id: $scope.phones[i].id, name: $scope.phones[i].name, snippet: $scope.phones[i].snippet, age: $scope.phones[i].age, imageUrl: $scope.phones[i].imageUrl};
           allPhones.push(tempPhone);
         }
+        $scope.phones = allPhones;
       });
       initializeFlag = false;
     }
@@ -50,13 +52,48 @@ phonecatControllers.controller('PhoneAddCtrl', ['$scope', 'Phone',
       
       console.log('A new phone will be added.');
       
-      var myPhone = {id: $scope.id, name: $scope.name, snippet: $scope.snippet, age: $scope.age, imageUrl: $scope.imageUrl};
+      myPhone = {id: $scope.id, name: $scope.name, snippet: $scope.snippet, age: $scope.age, imageUrl: 'img/phones/motorola-atrix-4g.0.jpg'};
       
       allPhones.push(myPhone);
       
+      console.log('Phone that was added: ' + allPhones[allPhones.indexOf(myPhone)].name);
       console.log('A new phone was added to the list!.');
       console.log('Number of phones in the list: ' + allPhones.length);
       console.log('List of all phones created so far:');
       console.log(allPhones);
+    };
+  }]);
+  
+phonecatControllers.controller('PhoneEditCtrl', ['$scope', '$routeParams', 'Phone',
+  function($scope, $routeParams, Phone) {
+    
+    console.log('Entered the PhoneEditCtrl controller.');
+    
+    for(var i = 0; i < allPhones.length; i++) {
+      if (allPhones[i].id == $routeParams.phoneId) {
+        myPhone = allPhones[i];
+        break;
+      }
+    }
+    
+    if (myPhone === undefined || myPhone === null) {
+      myPhone = {id: 'Not Found! Please go back and select one phone.', name: '', snippet: '', age: '', imageUrl: 'img/phones/motorola-atrix-4g.0.jpg'};
+    }
+    
+    console.log('Phone that will be edited:');
+    console.log(myPhone);
+    
+    $scope.phoneId = myPhone.id;
+    $scope.name = myPhone.name;
+    $scope.snippet = myPhone.snippet;
+    $scope.age = myPhone.age;
+    $scope.image = myPhone.imageUrl;
+    
+    $scope.editPhone = function($scope, Phone) {
+      
+      allPhones[allPhones.indexOf(myPhone)].name = $scope.name;
+      allPhones[allPhones.indexOf(myPhone)].snippet = $scope.snippet;
+      allPhones[allPhones.indexOf(myPhone)].age = $scope.age;
+      console.log('A phone was edited!.');
     };
   }]);
