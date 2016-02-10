@@ -3,28 +3,10 @@
 /* Controllers */
 
 var phonecatControllers = angular.module('phonecatControllers', []);
-var allPhones = [];
-var myPhone = null;
-var initializeFlag = true;
 
-phonecatControllers.controller('PhoneListCtrl', ['$scope', 'Phone',
-  function($scope, Phone) {
-    var tempPhone = null;
-    if (initializeFlag) {
-      $scope.phones = Phone.query(function() {
-        for (var i=0; i<$scope.phones.length; i++) {
-          tempPhone = {id: $scope.phones[i].id, name: $scope.phones[i].name, 
-                       snippet: $scope.phones[i].snippet, age: $scope.phones[i].age, 
-                       imageUrl: $scope.phones[i].imageUrl};
-          allPhones.push(tempPhone);
-        }
-        $scope.phones = allPhones;
-      });
-      initializeFlag = false;
-    }
-    else {
-      $scope.phones = allPhones;
-    }
+phonecatControllers.controller('PhoneListCtrl', ['$scope', 'DeviceManager',
+  function($scope, DeviceManager) {
+    $scope.phones = DeviceManager.getAllPhones();
     $scope.orderProp = 'name';
   }]);
 
@@ -38,49 +20,35 @@ phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams', 'Ph
     };
   }]);
 
-phonecatControllers.controller('PhoneAddCtrl', ['$scope',
-  function($scope) {
+phonecatControllers.controller('PhoneAddCtrl', ['$scope', 'DeviceManager',
+  function($scope, DeviceManager) {
     $scope.addNewPhone = function($scope) {
-      myPhone = {id: $scope.id, name: $scope.name, snippet: $scope.snippet, 
-                 age: $scope.age, imageUrl: 'img/phones/motorola-atrix-4g.0.jpg'};
-      allPhones.push(myPhone);
+      DeviceManager.addPhone({id: $scope.id, name: $scope.name, snippet: $scope.snippet, 
+                              age: $scope.age, imageUrl: 'img/phones/motorola-atrix-4g.0.jpg'});
     };
   }]);
   
-phonecatControllers.controller('PhoneEditCtrl', ['$scope', '$routeParams',
-  function($scope, $routeParams) {
-    for(var i = 0; i < allPhones.length; i++) {
-      if (allPhones[i].id == $routeParams.phoneId) {
-        myPhone = allPhones[i];
-        break;
-      }
+phonecatControllers.controller('PhoneEditCtrl', ['$scope', '$routeParams', 'DeviceManager',
+  function($scope, $routeParams, DeviceManager) {
+    var selectedPhone = DeviceManager.findPhoneById($routeParams.phoneId);
+    if (selectedPhone === undefined || selectedPhone === null) {
+      selectedPhone = {id: 'Not Found! Please go back and select one phone.', name: '', 
+                       snippet: '', age: '', imageUrl: 'img/phones/motorola-atrix-4g.0.jpg'};
     }
+    $scope.phoneId = selectedPhone.id;
+    $scope.name = selectedPhone.name;
+    $scope.snippet = selectedPhone.snippet;
+    $scope.age = selectedPhone.age;
+    $scope.image = selectedPhone.imageUrl;
     
-    if (myPhone === undefined || myPhone === null) {
-      myPhone = {id: 'Not Found! Please go back and select one phone.', name: '', 
-                 snippet: '', age: '', imageUrl: 'img/phones/motorola-atrix-4g.0.jpg'};
-    }
-    
-    $scope.phoneId = myPhone.id;
-    $scope.name = myPhone.name;
-    $scope.snippet = myPhone.snippet;
-    $scope.age = myPhone.age;
-    $scope.image = myPhone.imageUrl;
-    
-    $scope.editPhone = function($scope, Phone) {
-      allPhones[allPhones.indexOf(myPhone)].name = $scope.name;
-      allPhones[allPhones.indexOf(myPhone)].snippet = $scope.snippet;
-      allPhones[allPhones.indexOf(myPhone)].age = $scope.age;
+    $scope.editPhone = function($scope) {
+      DeviceManager.savePhone({id: selectedPhone.id, name: $scope.name, snippet: $scope.snippet, 
+                               age: $scope.age, imageUrl: selectedPhone.imageUrl});
     };
   }]);
   
-phonecatControllers.controller('PhoneDeleteCtrl', ['$routeParams', '$location',
-  function($routeParams, $location) {
-    for(var i = 0; i < allPhones.length; i++) {
-      if (allPhones[i].id == $routeParams.phoneId) {
-        allPhones.splice(i,1);
-        break;
-      }
-    }
+phonecatControllers.controller('PhoneDeleteCtrl', ['$routeParams', '$location', 'DeviceManager',
+  function($routeParams, $location, DeviceManager) {
+    DeviceManager.deletePhone($routeParams.phoneId);
     $location.path('/phones');
   }]);
