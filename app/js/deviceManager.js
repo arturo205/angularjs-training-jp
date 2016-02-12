@@ -1,8 +1,8 @@
 'use strict';
 
-var phoneDMServices = angular.module('phoneDMServices', []);
-
-phoneDMServices.factory('DeviceManager', ['Phone', 
+angular
+.module('phoneDMServices', [])
+.service('DeviceManager', ['Phone', 
   function(Phone) {
     var allPhones = [];
     var initializeFlag = true;

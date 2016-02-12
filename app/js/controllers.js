@@ -47,8 +47,8 @@ phonecatControllers.controller('PhoneEditCtrl', ['$scope', '$routeParams', 'Devi
     };
   }]);
   
-phonecatControllers.controller('PhoneDeleteCtrl', ['$routeParams', '$location', 'DeviceManager',
-  function($routeParams, $location, DeviceManager) {
+phonecatControllers.controller('PhoneDeleteCtrl', ['$scope', '$routeParams', '$location', 'DeviceManager',
+  function($scope, $routeParams, $location, DeviceManager) {
     DeviceManager.deletePhone($routeParams.phoneId);
     $location.path('/phones');
   }]);
