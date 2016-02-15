@@ -30,10 +30,6 @@ phonecatApp.config(['$routeProvider',
         templateUrl: 'partials/edit-phone.html',
         controller: 'PhoneEditCtrl'
       }).
-      when('/phones/:phoneId/delete', {
-        templateUrl: 'partials/phone-list.html',
-        controller: 'PhoneDeleteCtrl'
-      }).
       otherwise({
         redirectTo: '/phones'
       });

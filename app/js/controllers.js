@@ -8,6 +8,10 @@ phonecatControllers.controller('PhoneListCtrl', ['$scope', 'DeviceManager',
   function($scope, DeviceManager) {
     $scope.phones = DeviceManager.getAllPhones();
     $scope.orderProp = 'name';
+    
+    $scope.deletePhone = function($scope) {
+      DeviceManager.deletePhone($scope);
+    };
   }]);
 
 phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams', 'Phone',
@@ -45,10 +49,4 @@ phonecatControllers.controller('PhoneEditCtrl', ['$scope', '$routeParams', 'Devi
       DeviceManager.savePhone({id: selectedPhone.id, name: $scope.name, snippet: $scope.snippet, 
                                age: $scope.age, imageUrl: selectedPhone.imageUrl});
     };
-  }]);
-  
-phonecatControllers.controller('PhoneDeleteCtrl', ['$scope', '$routeParams', '$location', 'DeviceManager',
-  function($scope, $routeParams, $location, DeviceManager) {
-    DeviceManager.deletePhone($routeParams.phoneId);
-    $location.path('/phones');
   }]);
