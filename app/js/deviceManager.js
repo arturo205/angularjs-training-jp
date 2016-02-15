@@ -11,10 +11,9 @@ angular
         if (initializeFlag) {
           var tempPhoneList = Phone.query(function() {
             for (var i=0; i<tempPhoneList.length; i++) {
-              var tempPhone = {id: tempPhoneList[i].id, name: tempPhoneList[i].name, 
-                               snippet: tempPhoneList[i].snippet, age: tempPhoneList[i].age, 
-                               imageUrl: tempPhoneList[i].imageUrl};
-              allPhones.push(tempPhone);
+              allPhones.push({id: tempPhoneList[i].id, name: tempPhoneList[i].name, 
+                              snippet: tempPhoneList[i].snippet, age: tempPhoneList[i].age, 
+                              imageUrl: tempPhoneList[i].imageUrl});
             }
           });
           initializeFlag = false;

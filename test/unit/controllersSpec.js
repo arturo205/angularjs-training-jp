@@ -16,29 +16,44 @@ describe('PhoneCat controllers', function() {
   beforeEach(module('phoneDMServices')); 
 
   describe('PhoneListCtrl', function(){
-    var scope, ctrl, $httpBackend;
+    var scope, ctrl, $httpBackend, DeviceManagerMock, phonesQty;
+    
+    beforeEach(function() {
+      DeviceManagerMock = {
+        getAllPhones: function() {
+          return [{id: 'phone1', name: 'Nexus S'}, {id: 'phone2', name: 'Motorola DROID'}];
+        },
+        deletePhone: function(phoneId) { 
+          phonesQty --;
+        }
+      };
+    });
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
-      $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('phones/phones.json').
-          respond([{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
-
       scope = $rootScope.$new();
-      ctrl = $controller('PhoneListCtrl', {$scope: scope});
+      ctrl = $controller('PhoneListCtrl', {$scope: scope, DeviceManager: DeviceManagerMock});
+      phonesQty = 2;
     }));
 
 
-    it('should create "phones" model with 2 phones fetched from xhr', function() {
-      expect(scope.phones).toEqualData([]);
-      $httpBackend.flush();
-
-      expect(scope.phones).toEqualData(
-          [{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
+    it('should create "phones" model with 2 phones', function() {
+      expect(scope.phones).toEqualData([{id: 'phone1', name: 'Nexus S'}, {id: 'phone2', name: 'Motorola DROID'}]);
     });
 
 
     it('should set the default value of orderProp model', function() {
       expect(scope.orderProp).toBe('name');
+    });
+    
+    it('should call deletePhone service method', function($rootScope) {
+      spyOn(DeviceManagerMock, 'deletePhone').andCallThrough();
+      scope.deletePhone('phone1');
+      expect(DeviceManagerMock.deletePhone).toHaveBeenCalled();
+    });
+    
+    it('should decrease the phone list by one', function($rootScope) {
+      scope.deletePhone('phone1');
+      expect(phonesQty).toBe(1);
     });
   });
 
@@ -79,18 +94,15 @@ describe('PhoneCat controllers', function() {
   });
   
   describe('PhoneAddCtrl', function(){
-    var scope, ctrl, DeviceManagerMock, phonesQty;
+    var scope, ctrl, DeviceManagerMock;
     
     beforeEach(function() {
       DeviceManagerMock = {
-        addPhone: function(newPhone) {
-          phonesQty ++;
-        }
+        addPhone: function(newPhone) { }
       };
     });
     
     beforeEach(inject(function($rootScope, $controller) {
-      phonesQty = 20;
       scope = $rootScope.$new();
       ctrl = $controller('PhoneAddCtrl', {$scope: scope, DeviceManager: DeviceManagerMock});
     }));
@@ -99,39 +111,6 @@ describe('PhoneCat controllers', function() {
       spyOn(DeviceManagerMock, 'addPhone').andCallThrough();
       scope.addNewPhone({id:'My new phone'});
       expect(DeviceManagerMock.addPhone).toHaveBeenCalled();
-    });
-    
-    it('should increase the phone list by one', function($rootScope) {
-      scope.addNewPhone({id:'My new phone'});
-      expect(phonesQty).toBe(21);
-    });
-  });
-  
-  describe('PhoneDeleteCtrl', function(){
-    var scope, ctrl, DeviceManagerMock, phonesQty;
-    
-    beforeEach(function() {
-      DeviceManagerMock = {
-        deletePhone: function(phoneId) {
-          phonesQty --;
-        }
-      };
-    });
-    
-    beforeEach(inject(function($rootScope, $controller, $routeParams) {
-      phonesQty = 20;
-      $routeParams.phoneId = 'my phone';
-      scope = $rootScope.$new();
-      spyOn(DeviceManagerMock, 'deletePhone').andCallThrough();
-      ctrl = $controller('PhoneDeleteCtrl', {$scope: scope, DeviceManager: DeviceManagerMock});
-    }));
-    
-    it('should call deletePhone service method', function($rootScope) {
-      expect(DeviceManagerMock.deletePhone).toHaveBeenCalled();
-    });
-    
-    it('should decrease the phone list by one', function($rootScope) {
-      expect(phonesQty).toBe(19);
     });
   });
 });
